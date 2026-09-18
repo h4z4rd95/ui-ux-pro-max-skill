@@ -23,6 +23,10 @@ An AI skill that provides design intelligence for building professional UI/UX ac
   </a>
 </p>
 
+## Experimental Apps
+
+- `apps/brand-discovery-wizard` — یک wizard استاتیک برای کشف نوع محصول، استک، هویت برند، ساختار صفحات، branching سوالات UX/motion/3D و تولید prompt نهایی برای coding agent
+
 <p align="center">
   <b>If you find this useful, consider supporting the project:</b><br><br>
   <a href="https://paypal.me/uiuxpromax"><img src="https://img.shields.io/badge/PayPal-Donate-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="PayPal Donate"></a>
