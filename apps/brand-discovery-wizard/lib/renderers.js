@@ -535,44 +535,85 @@ function renderMotionStep(state, visibleQuestions) {
 }
 
 function renderContentStep(state, pageStrategy) {
-  const contentOptions = ["Hero", "Features", "Use Cases", "Pricing", "FAQ", "Testimonials", "CTA", "Footer"];
+  const contentOptions = [
+    { value: "Hero", description: "بخش اول: جمله‌ی اصلی ارزش + دکمه‌ی CTA." },
+    { value: "Features", description: "لیست قابلیت‌ها، معمولاً گرید کارت‌ها." },
+    { value: "Use Cases", description: "برای چه کسانی و چه مشکلی حل می‌شود." },
+    { value: "Pricing", description: "جدول قیمت‌گذاری و مقایسه پلن‌ها." },
+    { value: "FAQ", description: "پرسش‌های متداول برای رفع تردید خرید." },
+    { value: "Testimonials", description: "نظر مشتری‌ها و case study کوتاه." },
+    { value: "CTA", description: "فراخوان نهایی برای ثبت‌نام یا خرید." },
+    { value: "Footer", description: "لینک‌ها، شبکه‌های اجتماعی و کپی‌رایت." }
+  ];
+
+  const consistencyOptions = [
+    {
+      value: "consistent",
+      label: "مشابه سایت اصلی",
+      description: "همه‌ی صفحات از همان گرید، رنگ و فونت خانه‌ی اصلی پیروی می‌کنند. حس یکپارچه و امن."
+    },
+    {
+      value: "adaptive",
+      label: "سازگار ولی متفاوت",
+      description: "اسکلت اصلی یکی است ولی هر صفحه有小 تغییرات (رنگ بخش، چیدمان) دارد."
+    },
+    {
+      value: "distinct",
+      label: "هر page شخصیت جدا",
+      description: "هر صفحه مثل یک مینی‌سایت با حال‌وهوای خودش. پرانرژی اما خطر آشفتگی."
+    }
+  ];
 
   return `
     <section class="step-screen">
       <div class="section-head">
         <p class="eyebrow">گام ۶</p>
         <h2>صفحات، ساختار و محتوای نهایی</h2>
-        <p>بر اساس mode پروژه، سیستم باید هم صفحه‌ها را پیشنهاد دهد، هم سکشن‌ها و هم consistency style بین صفحات را بپرسد.</p>
+        <p>بر اساس mode پروژه، سیستم هم صفحه‌ها را پیشنهاد دهد، هم سکشن‌ها و هم consistency style بین صفحات را بپرسد.</p>
       </div>
       <div class="note-card">
-        <h3>پیشنهاد فعلی</h3>
-        <p>${pageStrategy.siteType === "landing" ? "Landing Page" : "Full Website"} · ${pageStrategy.pages.join(" / ")}</p>
+        <h3>پیشنهاد فعلی سیستم</h3>
+        <p>${pageStrategy.siteType === "landing" ? "Landing Page" : "Full Website"} · صفحات: ${pageStrategy.pages.join(" / ")} · سکشن‌ها: ${pageStrategy.sections.join(" / ")}</p>
       </div>
-      <div class="card-grid">
-        ${contentOptions
-          .map((section) =>
-            renderCheckboxCard({
-              field: "contentSections",
-              value: section,
-              label: section,
-              description: "در brief نهایی لحاظ شود.",
-              checked: state.contentSections.includes(section)
-            })
-          )
-          .join("")}
+      <div class="group-block">
+        <div class="group-title">سکشن‌هایی که در خروجی لحاظ شوند</div>
+        <div class="card-grid">
+          ${contentOptions
+            .map((section) =>
+              renderCheckboxCard({
+                field: "contentSections",
+                value: section.value,
+                label: section.value,
+                description: section.description,
+                checked: state.contentSections.includes(section.value)
+              })
+            )
+            .join("")}
+        </div>
       </div>
       ${
         state.productMode === "full-site"
-          ? renderSelect({
-              label: "استایل صفحات داخلی",
-              field: "pageStyleConsistency",
-              value: state.pageStyleConsistency,
-              items: [
-                { value: "consistent", label: "مشابه سایت اصلی" },
-                { value: "adaptive", label: "سازگار ولی متفاوت" },
-                { value: "distinct", label: "هر page شخصیت جدا" }
-              ]
-            })
+          ? `
+            <div class="group-block">
+              <div class="group-title">استایل صفحات داخلی — صفحات فرعی مثل صفحه اصلی باشند یا متفاوت</div>
+              <div class="card-grid">
+                ${consistencyOptions
+                  .map((option) =>
+                    renderCheckboxCard({
+                      field: "pageStyleConsistency",
+                      value: option.value,
+                      label: option.label,
+                      description: option.description,
+                      checked: state.pageStyleConsistency === option.value
+                    })
+                  )
+                  .join("")}
+              </div>
+              <div class="option-hint">
+                <b>توجه:</b> این بخش فقط یکی از گزینه‌ها را می‌پذیرد. اگر گزینه‌ی دیگری انتخاب کنی، گزینه‌ی قبلی خودکار جایگزین می‌شود.
+              </div>
+            </div>
+          `
           : ""
       }
       <label class="field">
@@ -659,7 +700,7 @@ export function renderLivePreview(root, params) {
       </section>
       <section class="preview-card">
         <h3>Branching Questions</h3>
-        <div class="mini-chips">${visibleQuestions.map((item) => `<span>${item}</span>`).join("")}</div>
+        <div class="mini-chips">${renderQuestionTags(visibleQuestions)}</div>
       </section>
       <section class="preview-card compact">
         <h3>Prompt Snapshot</h3>
