@@ -92,6 +92,10 @@ function handleClick(event) {
     return;
   }
 
+  if (suppressRender) {
+    return;
+  }
+
   const action = target.dataset.action;
   const value = target.dataset.value;
   const field = target.dataset.field || target.dataset.group;
@@ -109,6 +113,9 @@ function handleClick(event) {
   }
 
   if (action === "toggle-chip" || action === "toggle-array") {
+    if (target.tagName === "INPUT" && target.type === "checkbox") {
+      return;
+    }
     state[field] = toggleArrayValue(state[field], value);
   }
 
@@ -128,6 +135,8 @@ function handleClick(event) {
   renderApp();
 }
 
+let suppressRender = false;
+
 function handleChange(event) {
   const target = event.target;
   const action = target.dataset.action;
@@ -143,11 +152,27 @@ function handleChange(event) {
     state[target.dataset.field] = toggleArrayValue(state[target.dataset.field], target.value);
   }
 
+  if (action === "set-field-value") {
+    state[target.dataset.field] = target.dataset.value;
+  }
+
   renderApp();
 }
 
 document.addEventListener("click", handleClick);
 document.addEventListener("change", handleChange);
 document.addEventListener("input", handleChange);
+
+const selectShield = (event) => {
+  const select = event.target.closest?.("select[data-action='set-field']");
+  if (!select) {
+    suppressRender = false;
+    return;
+  }
+  suppressRender = true;
+};
+
+document.addEventListener("pointerdown", selectShield, true);
+window.addEventListener("blur", () => { suppressRender = false; });
 
 renderApp();

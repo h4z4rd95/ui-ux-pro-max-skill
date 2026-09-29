@@ -233,11 +233,13 @@ button {
   background-position: calc(100% - 22px) 22px, calc(100% - 16px) 22px;
   background-size: 6px 6px, 6px 6px;
   background-repeat: no-repeat;
+  cursor: pointer;
 }
 
 .field select option {
   background: #1b1f27;
   color: var(--text);
+  padding: 9px 12px;
 }
 
 .field input::placeholder,
@@ -386,13 +388,25 @@ button {
 
 .check-card {
   display: grid;
-  gap: 6px;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  column-gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+.check-card:hover {
+  border-color: rgba(255, 255, 255, 0.22);
 }
 
 .check-card input {
+  grid-row: span 2;
+  margin: 2px 0 0;
   inline-size: 18px;
   block-size: 18px;
   accent-color: var(--accent-strong);
+  cursor: pointer;
 }
 
 .check-card.checked,

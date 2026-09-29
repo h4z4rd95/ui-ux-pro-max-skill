@@ -163,10 +163,26 @@ function renderCheckboxCard(options) {
 
 function renderProductStep(state, catalog) {
   const goalOptions = [
-    { value: "lead-gen", label: "Lead Gen", description: "فرم، CTA و conversion مهم است." },
-    { value: "demo", label: "Demo", description: "نمایش قابلیت و proof مهم است." },
-    { value: "trust", label: "Trust", description: "اعتمادسازی و social proof مهم است." },
-    { value: "education", label: "Education", description: "آموزش و ساختار محتوا مهم است." }
+    {
+      value: "lead-gen",
+      label: "Lead Gen",
+      description: "هدف: گرفتن اطلاعات تماس — فرم، CTA و نرخ تبدیل در پرانت اولویت پیدا می‌کنند."
+    },
+    {
+      value: "demo",
+      label: "Demo",
+      description: "هدف: نشان دادن محصول — سکشن‌های اسکرین‌شات، ویدیو و قابلیت‌ها در پرانت برجسته می‌شوند."
+    },
+    {
+      value: "trust",
+      description: "هدف: اعتمادسازی — لوگو مشتری‌ها، نظر کاربران و نشان‌های امنیتی وارد پرانت می‌شوند.",
+      label: "Trust"
+    },
+    {
+      value: "education",
+      label: "Education",
+      description: "هدف: آموزش — سکشن‌های راهنما، FAQ و ساختار محتوا در پرانت اولویت می‌گیرند."
+    }
   ];
 
   const productModeItems = [
@@ -179,6 +195,16 @@ function renderProductStep(state, catalog) {
     : renderSwatchVisual(productModeVisuals.landing.swatch, "pm-landing");
 
   const modeMeta = productModeVisuals[state.productMode] ?? productModeVisuals.landing;
+
+  const productItems = catalog.products.slice(0, 60).map((item) => ({
+    value: item.name,
+    label: item.name
+  }));
+  const productMeta = productItems.find((item) => item.value === state.productType) ?? productItems[0];
+  const productVisual = renderSwatchVisual(
+    ["#0e1116", "#141b24", "#1d2734", "#91f2c8"],
+    "ptype"
+  );
 
   return `
     <section class="step-screen">
@@ -199,18 +225,20 @@ function renderProductStep(state, catalog) {
           doesNotDo: modeMeta.doesNotDo,
           reference: modeMeta.reference
         })}
-        ${renderSelect({
+        ${renderVisualSelect({
+          uid: "product-type",
           label: "نوع محصول",
           field: "productType",
-          value: state.productType,
-          items: catalog.products.slice(0, 60).map((item) => ({
-            value: item.name,
-            label: item.name
-          }))
+          value: productMeta.value,
+          items: productItems,
+          visual: productVisual,
+          useWhen: "پرامپت بر اساس نوع محصول، پترن پیشنهادی لندینگ و استایل‌های مرتبط را تنظیم می‌کند.",
+          doesNotDo: "نوع محصول به‌تنهایی کل طراحی را تعیین نمی‌کند؛ استایل گام بعدی هم با آن ترکیب می‌شود.",
+          reference: "data/generated-catalog.js · ۱۶۱ محصول"
         })}
       </div>
       <div class="group-block">
-        <div class="group-title">هدف‌های اصلی</div>
+        <div class="group-title">هدف‌های اصلی — این موارد چه تغییری در فایل نهایی ایجاد می‌کنند؟</div>
         <div class="card-grid">
           ${goalOptions
             .map((goal) =>

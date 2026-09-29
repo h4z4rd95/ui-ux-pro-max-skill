@@ -1,16 +1,12 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="fa" dir="rtl"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brand Discovery Wizard</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
     <div class="page-noise"></div>
@@ -27,11 +23,414 @@
     </header>
 
     <main class="app-shell">
-      <aside id="step-nav" class="side-panel"></aside>
-      <section id="wizard-panel" class="main-panel"></section>
-      <aside id="live-preview" class="preview-panel"></aside>
+      <aside id="step-nav" class="side-panel">
+    <div class="step-panel">
+      <div class="panel-title">نقشه مراحل</div>
+      <div class="step-list">
+    <button class="step-item active" data-action="go-step" data-step-index="0">
+      <span class="step-index">01</span>
+      <span class="step-label">محصول</span>
+    </button>
+  
+    <button class="step-item " data-action="go-step" data-step-index="1">
+      <span class="step-index">02</span>
+      <span class="step-label">استک</span>
+    </button>
+  
+    <button class="step-item " data-action="go-step" data-step-index="2">
+      <span class="step-index">03</span>
+      <span class="step-label">استایل</span>
+    </button>
+  
+    <button class="step-item " data-action="go-step" data-step-index="3">
+      <span class="step-index">04</span>
+      <span class="step-label">برند</span>
+    </button>
+  
+    <button class="step-item " data-action="go-step" data-step-index="4">
+      <span class="step-index">05</span>
+      <span class="step-label">موشن</span>
+    </button>
+  
+    <button class="step-item " data-action="go-step" data-step-index="5">
+      <span class="step-index">06</span>
+      <span class="step-label">صفحات و محتوا</span>
+    </button>
+  
+    <button class="step-item " data-action="go-step" data-step-index="6">
+      <span class="step-index">07</span>
+      <span class="step-label">خروجی</span>
+    </button>
+  </div>
+    </div>
+  </aside>
+      <section id="wizard-panel" class="main-panel">
+    
+    <section class="step-screen">
+      <div class="section-head">
+        <p class="eyebrow">گام ۱</p>
+        <h2>نوع محصول و دامنه سایت</h2>
+        <p>اول مشخص کن داریم برای یک landing page هدفمند طراحی می‌کنیم یا یک full website چندصفحه‌ای. هر کدام مسیر سوالات بعدی را عوض می‌کند.</p>
+      </div>
+      <div class="control-grid">
+        
+    <div class="option-card static">
+      <svg class="visual-svg" viewBox="0 0 120 76" role="img" aria-hidden="true">
+    <defs><linearGradient id="sw-pm-landing" x1="0" y1="0" x2="1" y2="1"><stop offset="0.00" stop-color="#0b0f14"></stop><stop offset="0.50" stop-color="#91f2c8"></stop><stop offset="1.00" stop-color="#ff8f5c"></stop></linearGradient></defs>
+    <rect width="120" height="76" rx="10" fill="#0e1116"></rect>
+    <rect x="6" y="6" width="108" height="64" rx="8" fill="url(#sw-pm-landing)"></rect>
+    <rect x="14" y="52" width="46" height="10" rx="5" fill="rgba(255,255,255,0.82)"></rect>
+  </svg>
+      <span class="option-body">
+        <label class="field" style="display:grid;gap:6px">
+          <span>حالت پروژه</span>
+          <select data-action="set-field" data-field="productMode" style="position: relative;">
+            
+                <option value="landing" selected="">
+                  Landing Page
+                </option>
+              
+                <option value="full-site">
+                  Full Website
+                </option>
+              
+          </select>
+        </label>
+        <span class="option-when"><b>مناسب وقتی:</b> موقعی که یک محصول خاص را می‌فروشی، یک کمپین تبلیغاتی داری، یا کاربر باید سریع به یک تصمیم برسد.</span>
+        <span class="option-not"><b>نمی‌تواند:</b> صفحات جدا برای قیمت/مستندات/بلاگ ندارد؛ برای محصولات چندوجهی کم می‌آورد.</span>
+        <span class="option-ref"><b>ref</b> · linear.app · v0.dev · vercel landing pages</span>
+      </span>
+    </div>
+  
+        
+    <label class="field">
+      <span>نوع محصول</span>
+      <select data-action="set-field" data-field="productType" style="position: relative;">
+        
+              <option value="SaaS (General)">
+                SaaS (General)
+              </option>
+            
+              <option value="Micro SaaS">
+                Micro SaaS
+              </option>
+            
+              <option value="E-commerce">
+                E-commerce
+              </option>
+            
+              <option value="E-commerce Luxury">
+                E-commerce Luxury
+              </option>
+            
+              <option value="B2B Service">
+                B2B Service
+              </option>
+            
+              <option value="Financial Dashboard">
+                Financial Dashboard
+              </option>
+            
+              <option value="Analytics Dashboard">
+                Analytics Dashboard
+              </option>
+            
+              <option value="Healthcare App">
+                Healthcare App
+              </option>
+            
+              <option value="Educational App">
+                Educational App
+              </option>
+            
+              <option value="Creative Agency">
+                Creative Agency
+              </option>
+            
+              <option value="Portfolio/Personal">
+                Portfolio/Personal
+              </option>
+            
+              <option value="Gaming">
+                Gaming
+              </option>
+            
+              <option value="Government/Public Service">
+                Government/Public Service
+              </option>
+            
+              <option value="Fintech/Crypto">
+                Fintech/Crypto
+              </option>
+            
+              <option value="Social Media App">
+                Social Media App
+              </option>
+            
+              <option value="Productivity Tool">
+                Productivity Tool
+              </option>
+            
+              <option value="Design System/Component Library">
+                Design System/Component Library
+              </option>
+            
+              <option value="AI/Chatbot Platform" selected="">
+                AI/Chatbot Platform
+              </option>
+            
+              <option value="NFT/Web3 Platform">
+                NFT/Web3 Platform
+              </option>
+            
+              <option value="Creator Economy Platform">
+                Creator Economy Platform
+              </option>
+            
+              <option value="Remote Work/Collaboration Tool">
+                Remote Work/Collaboration Tool
+              </option>
+            
+              <option value="Mental Health App">
+                Mental Health App
+              </option>
+            
+              <option value="Pet Tech App">
+                Pet Tech App
+              </option>
+            
+              <option value="Smart Home/IoT Dashboard">
+                Smart Home/IoT Dashboard
+              </option>
+            
+              <option value="EV/Charging Ecosystem">
+                EV/Charging Ecosystem
+              </option>
+            
+              <option value="Subscription Box Service">
+                Subscription Box Service
+              </option>
+            
+              <option value="Podcast Platform">
+                Podcast Platform
+              </option>
+            
+              <option value="Dating App">
+                Dating App
+              </option>
+            
+              <option value="Micro-Credentials/Badges Platform">
+                Micro-Credentials/Badges Platform
+              </option>
+            
+              <option value="Knowledge Base/Documentation">
+                Knowledge Base/Documentation
+              </option>
+            
+              <option value="Hyperlocal Services">
+                Hyperlocal Services
+              </option>
+            
+              <option value="Beauty/Spa/Wellness Service">
+                Beauty/Spa/Wellness Service
+              </option>
+            
+              <option value="Luxury/Premium Brand">
+                Luxury/Premium Brand
+              </option>
+            
+              <option value="Restaurant/Food Service">
+                Restaurant/Food Service
+              </option>
+            
+              <option value="Fitness/Gym App">
+                Fitness/Gym App
+              </option>
+            
+              <option value="Real Estate/Property">
+                Real Estate/Property
+              </option>
+            
+              <option value="Travel/Tourism Agency">
+                Travel/Tourism Agency
+              </option>
+            
+              <option value="Hotel/Hospitality">
+                Hotel/Hospitality
+              </option>
+            
+              <option value="Wedding/Event Planning">
+                Wedding/Event Planning
+              </option>
+            
+              <option value="Legal Services">
+                Legal Services
+              </option>
+            
+              <option value="Insurance Platform">
+                Insurance Platform
+              </option>
+            
+              <option value="Banking/Traditional Finance">
+                Banking/Traditional Finance
+              </option>
+            
+              <option value="Online Course/E-learning">
+                Online Course/E-learning
+              </option>
+            
+              <option value="Non-profit/Charity">
+                Non-profit/Charity
+              </option>
+            
+              <option value="Music Streaming">
+                Music Streaming
+              </option>
+            
+              <option value="Video Streaming/OTT">
+                Video Streaming/OTT
+              </option>
+            
+              <option value="Job Board/Recruitment">
+                Job Board/Recruitment
+              </option>
+            
+              <option value="Marketplace (P2P)">
+                Marketplace (P2P)
+              </option>
+            
+              <option value="Logistics/Delivery">
+                Logistics/Delivery
+              </option>
+            
+              <option value="Agriculture/Farm Tech">
+                Agriculture/Farm Tech
+              </option>
+            
+              <option value="Construction/Architecture">
+                Construction/Architecture
+              </option>
+            
+              <option value="Automotive/Car Dealership">
+                Automotive/Car Dealership
+              </option>
+            
+              <option value="Photography Studio">
+                Photography Studio
+              </option>
+            
+              <option value="Coworking Space">
+                Coworking Space
+              </option>
+            
+              <option value="Home Services (Plumber/Electrician)">
+                Home Services (Plumber/Electrician)
+              </option>
+            
+              <option value="Childcare/Daycare">
+                Childcare/Daycare
+              </option>
+            
+              <option value="Senior Care/Elderly">
+                Senior Care/Elderly
+              </option>
+            
+              <option value="Medical Clinic">
+                Medical Clinic
+              </option>
+            
+              <option value="Pharmacy/Drug Store">
+                Pharmacy/Drug Store
+              </option>
+            
+              <option value="Dental Practice">
+                Dental Practice
+              </option>
+            
+      </select>
+    </label>
+  
+      </div>
+      <div class="group-block">
+        <div class="group-title">هدف‌های اصلی</div>
+        <div class="card-grid">
+          
+    <label class="check-card checked">
+      <input type="checkbox" data-action="toggle-array" data-field="goals" value="lead-gen" checked="" style="position: relative;">
+      <span class="check-title">Lead Gen</span>
+      <span class="check-description" style="position: relative;">فرم، CTA و conversion مهم است.</span>
+    </label>
+  
+    <label class="check-card checked">
+      <input type="checkbox" data-action="toggle-array" data-field="goals" value="demo" checked="">
+      <span class="check-title">Demo</span>
+      <span class="check-description">نمایش قابلیت و proof مهم است.</span>
+    </label>
+  
+    <label class="check-card ">
+      <input type="checkbox" data-action="toggle-array" data-field="goals" value="trust">
+      <span class="check-title">Trust</span>
+      <span class="check-description">اعتمادسازی و social proof مهم است.</span>
+    </label>
+  
+    <label class="check-card ">
+      <input type="checkbox" data-action="toggle-array" data-field="goals" value="education">
+      <span class="check-title">Education</span>
+      <span class="check-description">آموزش و ساختار محتوا مهم است.</span>
+    </label>
+  
+        </div>
+      </div>
+    </section>
+  
+    <div class="wizard-nav">
+      <button class="ghost-btn" data-action="prev-step" disabled="">مرحله قبل</button>
+      <button class="primary-btn" data-action="next-step">مرحله بعد</button>
+    </div>
+  </section>
+      <aside id="live-preview" class="preview-panel">
+    <div class="preview-stack">
+      <section class="preview-card hero-card">
+        <p class="eyebrow">Live Brief</p>
+        <h2>NovaOps</h2>
+        <p>AI/Chatbot Platform · landing</p>
+      </section>
+      <section class="preview-card">
+        <h3>پیشنهاد ساختار</h3>
+        <ul>
+          <li>Pattern: Interactive Product Demo</li>
+          <li>Pages: Home</li>
+          <li>Sections: Hero / Interactive Demo / Features / Use Cases / FAQ / CTA</li>
+        </ul>
+      </section>
+      <section class="preview-card">
+        <h3>Stack Families</h3>
+        <div class="mini-chips"><span>nextjs</span><span>react</span><span>shadcn</span></div>
+      </section>
+      <section class="preview-card">
+        <h3>Style Directions</h3>
+        <div class="mini-chips"><span>Minimalism &amp; Swiss Style</span><span>Glassmorphism</span><span>Zero Interface</span></div>
+      </section>
+      <section class="preview-card">
+        <h3>Branching Questions</h3>
+        <div class="mini-chips"><span>نوع محصول</span><span>حالت پروژه (لندینگ / سایت کامل)</span><span>استک، زبان و کتابخانه</span><span>جهت بصری و استایل</span><span>هدف صفحات</span><span>نوع لودر</span><span>هیرو یا اسلایدر</span><span>تمرکز لندینگ</span></div>
+      </section>
+      <section class="preview-card compact">
+        <h3>Prompt Snapshot</h3>
+        <pre>Build a landing website for NovaOps.
+Brand tone: precise, technical, confident.
+Preferred stack: nextjs, react, shadcn.
+Required pages: Home.
+Required sections: Hero, Interactive Demo, Features, Use Cases, FAQ, CTA.
+Motion level: medium.
+3D level: none.
+Keep the information architecture clear, conversion-aware, and implementation-ready.</pre>
+      </section>
+    </div>
+  </aside>
     </main>
 
     <script type="module" src="./app.js"></script>
-  </body>
-</html>
+  
+
+</body></html>
