@@ -552,6 +552,48 @@ function renderMotionStep(state, visibleQuestions) {
           })}
         </div>
       </div>
+      ${
+        state.threeDLevel && state.threeDLevel !== "none"
+          ? `
+            <div class="group-block">
+              <div class="group-title">آبجکت‌های سه‌بعدی</div>
+              <div class="chip-wall">
+                ${["استخر", "کیهان", "پارامید", "کره", "لوزی", "ستاره", "تمرین"].map((obj) =>
+                  renderChip({
+                    label: obj,
+                    value: obj,
+                    group: "threeDObjects",
+                    action: "toggle-array",
+                    active: state.threeDObjects.includes(obj),
+                    kind: "neutral"
+                  })
+                ).join("")}
+              </div>
+              <div class="option-hint">
+                <b>این آبجکت‌ها چه کار می‌کنند؟</b> در لندینگ یا فول‌سایت، یک یا چند آبجکت 3D انتخاب کنید. فقط در صورتی که بودجه‌ی رندر داشته باشید استفاده کنید؛ ترجیحاً توی hero یا یک بخش features تعبیه شوند.
+              </div>
+            </div>
+            <div class="group-block">
+              <div class="group-title">جایگذاری سه‌بعدی</div>
+              ${renderVisualSelect({
+                uid: "three-d-placement",
+                label: "3D کجای سایت قرار بگیرد",
+                field: "threeDPlacement",
+                value: state.threeDPlacement || "hero",
+                items: [
+                  { value: "hero", label: "فقط در بخش Hero" },
+                  { value: "features", label: "در بخش Features/کارت‌ها" },
+                  { value: "full", label: "همه‌ی صفحه — فول 3D" }
+                ],
+                visual: renderThreeDVisual(threeDMeta.shape, "three-d-placement"),
+                useWhen: "استفاده از 3D برای جلب توجه در نقطه‌ی بصری کلیدی.",
+                doesNotDo: "تمام صفحه را 3D نکن — باعث کاهش سرعت و گیج‌کنندگی می‌شود.",
+                reference: "threejs.org · drei examples"
+              })}
+            </div>
+          `
+          : ""
+      }
       <div class="group-block">
         <div class="group-title">سوالاتی که سیستم تا الان فعال کرده</div>
         <div class="question-tags">${renderQuestionTags(visibleQuestions)}</div>
@@ -640,6 +682,24 @@ function renderContentStep(state, pageStrategy) {
               </div>
               <div class="option-hint">
                 <b>توجه:</b> این بخش فقط یکی از گزینه‌ها را می‌پذیرد. اگر گزینه‌ی دیگری انتخاب کنی، گزینه‌ی قبلی خودکار جایگزین می‌شود.
+              </div>
+            </div>
+            <div class="group-block">
+              <div class="group-title">صفحات پشتیبان اضافی — صفحات دیگری که می‌خواهید اضافه کنید؟</div>
+              <div class="chip-wall">
+                ${["About", "Blog", "Help Center", "Status", "Privacy Policy", "Terms", "Jobs", "API Docs"].map((page) =>
+                  renderChip({
+                    label: page,
+                    value: page,
+                    group: "supportingPages",
+                    action: "toggle-array",
+                    active: state.supportingPages.includes(page),
+                    kind: "neutral"
+                  })
+                ).join("")}
+              </div>
+              <div class="option-hint">
+                <b>این صفحات چه کمکی می‌کنند؟</b> در پرامپت نهایی، اینها به عنوان صفحات پیشنهادی اضافه می‌شوند و routing و منوی ناوبری سایت را تعریف می‌کنند.
               </div>
             </div>
           `

@@ -26,10 +26,13 @@ export function createInitialState(catalog) {
     sliderMode: "hero",
     motionLevel: "medium",
     threeDLevel: "none",
+    threeDObjects: [],
+    threeDPlacement: "",
     needsMascot: false,
     mascotStyle: "abstract",
     pageStyleConsistency: "consistent",
     contentSections: ["Hero", "Features", "FAQ", "CTA"],
+    supportingPages: [],
     notes: ""
   };
 }

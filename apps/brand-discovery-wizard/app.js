@@ -18,16 +18,32 @@ function deriveState() {
   const stackCards = getFeaturedStackCards(state.stackFamilies);
   const styleSuggestions = getStyleSuggestions(state.productType);
   const visibleQuestions = getVisibleQuestions(state);
-  const pageStrategy = decidePageStrategy(state);
+  const pageStrategy = decidePageStrategy({
+    productMode: state.productMode,
+    productType: state.productType,
+    goals: state.goals,
+    styleChoices: state.styleChoices,
+    motionLevel: state.motionLevel
+  });
   const prompt = generateMasterPrompt({
     brand: {
       name: state.brandName,
       tone: state.brandTone
     },
     stackChoices: stackCards.map((stack) => stack.label),
+    goals: state.goals,
+    styleChoices: state.styleChoices,
     pageStrategy,
     motionLevel: state.motionLevel,
-    threeDLevel: state.threeDLevel
+    threeDLevel: state.threeDLevel,
+    threeDObjects: state.threeDObjects ?? [],
+    threeDPlacement: state.threeDPlacement ?? "",
+    smoothScroll: state.smoothScroll,
+    sliderMode: state.sliderMode,
+    loaderType: state.loaderType,
+    pageStyleConsistency: state.pageStyleConsistency,
+    contentSections: state.contentSections,
+    supportingPages: state.supportingPages ?? []
   });
 
   return {
