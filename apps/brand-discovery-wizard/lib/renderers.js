@@ -101,9 +101,10 @@ function renderVisualSelect(options) {
 function renderStepItem(step, index, activeStep) {
   const status = index === activeStep ? "active" : index < activeStep ? "done" : "";
   return `
-    <button class="step-item ${status}" data-action="go-step" data-step-index="${index}">
+    <button class="step-item ${status}" data-action="go-step" data-step-index="${index}" title="${step.description ?? step.label}">
       <span class="step-index">${String(index + 1).padStart(2, "0")}</span>
       <span class="step-label">${step.label}</span>
+      <span class="step-sub">${step.subtitle ?? ""}</span>
     </button>
   `;
 }

@@ -1,11 +1,11 @@
 export const steps = [
-  { id: "product", label: "محصول" },
-  { id: "stack", label: "استک" },
-  { id: "style", label: "استایل" },
-  { id: "brand", label: "برند" },
-  { id: "motion", label: "موشن" },
-  { id: "content", label: "صفحات و محتوا" },
-  { id: "output", label: "خروجی" }
+  { id: "product", label: "محصول", subtitle: "دامنه و هدف", description: "لندینگ یا سایت کامل — این انتخاب مسیر بقیه‌ی سوالات را عوض می‌کند" },
+  { id: "stack", label: "استک", subtitle: "زبان و کتابخانه", description: "استک‌های فنی برای محدود کردن پرامپت نهایی" },
+  { id: "style", label: "استایل", subtitle: "رفرنس بصری", description: "از تصاویر واقعی انتخاب استایل — نه از کلمات" },
+  { id: "brand", label: "برند", subtitle: "شخصیت و لوگو", description: "لحن، رنگ و لوگوی برند" },
+  { id: "motion", label: "موشن", subtitle: "انیمیشن و حرکت", description: "لودر، اسکرول و حرکات سه‌بعدی" },
+  { id: "content", label: "صفحات و محتوا", subtitle: "ساختار صفحه", description: "صفحات، بخش‌ها و سازگاری استایلی" },
+  { id: "output", label: "خروجی", subtitle: "پرامپت نهایی", description: "پرامپت کامل برای ایجنت کدنویس — فقط کپی کنید" }
 ];
 
 export function createInitialState(catalog) {

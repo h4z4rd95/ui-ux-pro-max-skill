@@ -166,6 +166,16 @@ button {
   letter-spacing: 0.12em;
 }
 
+.step-label {
+  font-size: 0.94rem;
+  font-weight: 600;
+}
+
+.step-sub {
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+
 .step-screen {
   padding: 24px;
 }

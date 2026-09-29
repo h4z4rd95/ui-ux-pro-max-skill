@@ -164,7 +164,7 @@ document.addEventListener("change", handleChange);
 document.addEventListener("input", handleChange);
 
 const selectShield = (event) => {
-  const select = event.target.closest?.("select[data-action='set-field']");
+  const select = event.target.closest?.("select");
   if (!select) {
     suppressRender = false;
     return;
