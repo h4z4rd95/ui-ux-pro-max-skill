@@ -1,3 +1,103 @@
+import {
+  loaderVisuals,
+  mascotStyleVisuals,
+  motionLevelVisuals,
+  pickStyleVisual,
+  productModeVisuals,
+  renderLayoutVisual,
+  renderLoaderVisual,
+  renderMascotVisual,
+  renderMotionVisual,
+  renderSwatchVisual,
+  renderThreeDVisual,
+  sliderModeVisuals,
+  styleVisuals,
+  threeDVisuals
+} from "./visual-library.js";
+
+const QUESTION_LABELS = {
+  "product-type": "نوع محصول",
+  "product-mode": "حالت پروژه (لندینگ / سایت کامل)",
+  "stack-family": "استک، زبان و کتابخانه",
+  "style-direction": "جهت بصری و استایل",
+  "page-goals": "هدف صفحات",
+  "loader-type": "نوع لودر",
+  "mascot-style": "سبک کاراکتر برند",
+  "three-d-objects": "کدام آبجکت‌های سه‌بعدی",
+  "three-d-placement": "سه‌بعدی کجای سایت",
+  "page-style-consistency": "استایل صفحات داخلی",
+  supportingPages: "صفحات پشتیبان",
+  "hero-vs-slider": "هیرو یا اسلایدر",
+  "landing-focus": "تمرکز لندینگ"
+};
+
+function renderQuestionTags(visibleQuestions) {
+  return visibleQuestions
+    .map((key) => `<span>${QUESTION_LABELS[key] ?? key}</span>`)
+    .join("");
+}
+
+function renderOptionCard(options) {
+  const {
+    uid,
+    title,
+    whatItDoes,
+    useWhen,
+    doesNotDo,
+    reference,
+    visual,
+    active = false,
+    action = "toggle-array",
+    field = "",
+    value = ""
+  } = options;
+
+  return `
+    <button
+      type="button"
+      class="option-card ${active ? "is-picked" : ""}"
+      data-action="${action}"
+      data-field="${field}"
+      data-value="${value}"
+    >
+      ${visual}
+      <span class="option-body">
+        <span class="option-title">${title}</span>
+        <span class="option-what">${whatItDoes}</span>
+        <span class="option-when"><b>مناسب وقتی:</b> ${useWhen}</span>
+        <span class="option-not"><b>نمی‌تواند:</b> ${doesNotDo}</span>
+        <span class="option-ref"><b>ref</b> · ${reference}</span>
+      </span>
+    </button>
+  `;
+}
+
+function renderVisualSelect(options) {
+  const { uid, visual, items, value } = options;
+  return `
+    <div class="option-card static">
+      ${visual}
+      <span class="option-body">
+        <label class="field" style="display:grid;gap:6px">
+          <span>${options.label}</span>
+          <select data-action="set-field" data-field="${options.field}">
+            ${items.map(
+              (item) => `
+                <option value="${item.value}" ${item.value === value ? "selected" : ""}>
+                  ${item.label}
+                </option>
+              `
+            ).join("")}
+          </select>
+        </label>
+        <span class="option-when"><b>مناسب وقتی:</b> ${options.useWhen}</span>
+        <span class="option-not"><b>نمی‌تواند:</b> ${options.doesNotDo}</span>
+        <span class="option-ref"><b>ref</b> · ${options.reference}</span>
+      </span>
+    </div>
+  `;
+}
+
 function renderStepItem(step, index, activeStep) {
   const status = index === activeStep ? "active" : index < activeStep ? "done" : "";
   return `
@@ -69,22 +169,35 @@ function renderProductStep(state, catalog) {
     { value: "education", label: "Education", description: "آموزش و ساختار محتوا مهم است." }
   ];
 
+  const productModeItems = [
+    { value: "landing", label: "Landing Page" },
+    { value: "full-site", label: "Full Website" }
+  ];
+
+  const modeVisual = state.productMode === "full-site"
+    ? renderSwatchVisual(productModeVisuals["full-site"].swatch, "pm-full")
+    : renderSwatchVisual(productModeVisuals.landing.swatch, "pm-landing");
+
+  const modeMeta = productModeVisuals[state.productMode] ?? productModeVisuals.landing;
+
   return `
     <section class="step-screen">
       <div class="section-head">
         <p class="eyebrow">گام ۱</p>
         <h2>نوع محصول و دامنه سایت</h2>
-        <p>اول مشخص کن داریم برای یک landing page هدفمند طراحی می‌کنیم یا یک full website چندصفحه‌ای.</p>
+        <p>اول مشخص کن داریم برای یک landing page هدفمند طراحی می‌کنیم یا یک full website چندصفحه‌ای. هر کدام مسیر سوالات بعدی را عوض می‌کند.</p>
       </div>
       <div class="control-grid">
-        ${renderSelect({
+        ${renderVisualSelect({
+          uid: "product-mode",
           label: "حالت پروژه",
           field: "productMode",
           value: state.productMode,
-          items: [
-            { value: "landing", label: "Landing Page" },
-            { value: "full-site", label: "Full Website" }
-          ]
+          items: productModeItems,
+          visual: modeVisual,
+          useWhen: modeMeta.useWhen,
+          doesNotDo: modeMeta.doesNotDo,
+          reference: modeMeta.reference
         })}
         ${renderSelect({
           label: "نوع محصول",
@@ -146,190 +259,276 @@ function renderStyleStep(state, styleSuggestions) {
       <div class="section-head">
         <p class="eyebrow">گام ۳</p>
         <h2>جهت بصری و رفرنس‌ها</h2>
-        <p>به‌جای شروع سریع طراحی، اول preference cardها را انتخاب کن تا موتور brief از روی آن‌ها سلیقه کاربر را بفهمد.</p>
+        <p>به‌جای شروع سریع طراحی، اول یک نمونه‌ی واقعی از هر استایل را ببین و آن را انتخاب کن. هر کارت می‌گوید آن استایل چه اتفاقی می‌اندازد، کجا خوب جنسه و کجا بد. چند گزینه می‌توانی انتخاب کنی.</p>
       </div>
-      <div class="style-grid">
+      <div class="option-list">
         ${styleSuggestions
-          .map(
-            (style) => `
-              <button
-                type="button"
-                class="style-card ${state.styleChoices.includes(style.category) ? "is-picked" : ""}"
-                data-action="toggle-array"
-                data-field="styleChoices"
-                data-value="${style.category}"
-              >
-                <span class="style-meta">${style.type}</span>
-                <strong>${style.category}</strong>
-                <span>${style.effects.slice(0, 2).join(" · ") || "بدون افکت شاخص"}</span>
-              </button>
-            `
-          )
+          .map((style) => {
+            const visual = pickStyleVisual(style.category);
+            const fallback = {
+              title: style.category,
+              whatItDoes: `استایل ${style.type} با حال‌وهوای ${style.effects?.slice(0, 2).join(" و ") || "کلاسیک"}.`,
+              useWhen: "موقعی که همین حس با برندت می‌خواند.",
+              doesNotDo: "تنها در صورت تناقض با هویت برند آن را انتخاب نکن.",
+              reference: "land-book.com · godly.website · awwwards.com",
+              swatch: ["#161a21", "#91f2c8", "#ff8f5c"]
+            };
+            const meta = visual ?? fallback;
+
+            return renderOptionCard({
+              uid: `style-${style.category}`,
+              title: meta.title,
+              whatItDoes: meta.whatItDoes,
+              useWhen: meta.useWhen,
+              doesNotDo: meta.doesNotDo,
+              reference: meta.reference,
+              visual: renderSwatchVisual(meta.swatch, `style-${style.category}`.replace(/\s/g, "-")),
+              active: state.styleChoices.includes(style.category),
+              action: "toggle-array",
+              field: "styleChoices",
+              value: style.category
+            });
+          })
           .join("")}
+      </div>
+      <div class="option-hint">
+        <b>چرا نمونه‌ی بصری؟</b> چون کلمه‌ی «مینیمال» برای هر آدمی یک معنی دارد اما تصویرش یک معنی. این کارت‌ها ذهن تو و ذهن ایجنت کدنویس را روی یک تصویر واحد قفل می‌کنند و خطر سوءتفاهم را کم می‌کنند. اگر هیچ‌کدام مطابق سلیقه‌ات نبود، در یادداشت‌های تکمیلی (گام ۶) یک رفرنس واقعی پیست کن.
       </div>
     </section>
   `;
 }
 
 function renderBrandStep(state) {
-  const toneOptions = ["precise", "technical", "confident", "playful", "luxury", "warm", "bold", "minimal"];
+  const toneOptions = [
+    { value: "precise", label: "precise — دقیق", description: "جملات کوتاه، عدد و مستند. برای ابزارهای فنی." },
+    { value: "technical", label: "technical — فنی", description: "واژگان تخصصی و توضیح مکانیزم‌ها." },
+    { value: "confident", label: "confident — مطمئن", description: "جملات قاطع و بدون تردید." },
+    { value: "playful", label: "playful — شوخ", description: "طنز، لحن دوستانه و غیررسمی." },
+    { value: "luxury", label: "luxury — لوکس", description: "کلمات نجیب، فاصله و پرستیژ." },
+    { value: "warm", label: "warm — گرم", description: "انسانی، همدل و نزدیک." },
+    { value: "bold", label: "bold — جسور", description: "شعارها و ادعاهای بزرگ." },
+    { value: "minimal", label: "minimal — مینیمال", description: "کمترین کلمات، بیشتر فضا." }
+  ];
+
+  const mascotMeta = mascotStyleVisuals[state.mascotStyle] ?? mascotStyleVisuals.abstract;
 
   return `
     <section class="step-screen">
       <div class="section-head">
         <p class="eyebrow">گام ۴</p>
         <h2>هویت برند</h2>
-        <p>نام برند، tone و نیاز به کاراکتر باید قبل از طراحی تثبیت شوند تا خروجی نهایی فقط زیبا نباشد، بلکه برندمحور باشد.</p>
+        <p>نام برند، لحن و نیاز به کاراکتر باید قبل از طراحی تثبیت شوند تا خروجی نهایی فقط زیبا نباشد، بلکه برندمحور باشد.</p>
       </div>
       <label class="field">
         <span>نام برند</span>
         <input type="text" value="${state.brandName}" data-action="set-field" data-field="brandName" placeholder="مثلاً NovaOps">
       </label>
       <div class="group-block">
-        <div class="group-title">لحن برند</div>
-        <div class="chip-wall">
+        <div class="group-title">لحن برند — سایت با چه صدایی حرف می‌زند</div>
+        <div class="card-grid">
           ${toneOptions
             .map((tone) =>
-              renderChip({
-                label: tone,
-                value: tone,
-                group: "brandTone",
-                active: state.brandTone.includes(tone)
+              renderCheckboxCard({
+                ...tone,
+                field: "brandTone",
+                checked: state.brandTone.includes(tone.value)
               })
             )
             .join("")}
         </div>
       </div>
-      <div class="inline-split">
-        ${renderChip({
-          label: "کاراکتر برند لازم است",
-          value: "true",
-          action: "set-boolean",
-          group: "needsMascot",
-          active: state.needsMascot,
-          kind: "accent"
-        })}
-        ${renderChip({
-          label: "بدون کاراکتر",
-          value: "false",
-          action: "set-boolean",
-          group: "needsMascot",
-          active: !state.needsMascot
-        })}
+      <div class="group-block">
+        <div class="group-title">آیا برند یک کاراکتر (mascot) لازم دارد؟</div>
+        <div class="inline-split">
+          ${renderChip({
+            label: "کاراکتر برند لازم است",
+            value: "true",
+            action: "set-boolean",
+            group: "needsMascot",
+            active: state.needsMascot,
+            kind: "accent"
+          })}
+          ${renderChip({
+            label: "بدون کاراکتر",
+            value: "false",
+            action: "set-boolean",
+            group: "needsMascot",
+            active: !state.needsMascot
+          })}
+        </div>
+        <div class="option-hint">
+          <b>کاراکتر یعنی چه؟</b> یک موجود برند که در hero، states خالی و illustrations ظاهر می‌شود و برند را به یاد ماندنی می‌کند (مثل ربات Notion یا پرنده‌ی Duolingo). اگر برند جدی/اینترپرایز است، معمولاً لازم نیست.
+        </div>
+        ${
+          state.needsMascot
+            ? renderVisualSelect({
+                uid: "mascot-style",
+                label: "سبک کاراکتر",
+                field: "mascotStyle",
+                value: state.mascotStyle,
+                items: [
+                  { value: "abstract", label: "Abstract — مجرد" },
+                  { value: "robotic", label: "Robotic — ربات" },
+                  { value: "organic", label: "Organic — ارگانیک" },
+                  { value: "playful", label: "Playful — شوخ" }
+                ],
+                visual: renderMascotVisual(mascotMeta.face, "mascot-style"),
+                useWhen: mascotMeta.useWhen,
+                doesNotDo: mascotMeta.doesNotDo,
+                reference: mascotMeta.reference
+              })
+            : ""
+        }
       </div>
-      ${
-        state.needsMascot
-          ? renderSelect({
-              label: "سبک کاراکتر",
-              field: "mascotStyle",
-              value: state.mascotStyle,
-              items: [
-                { value: "abstract", label: "Abstract" },
-                { value: "robotic", label: "Robotic" },
-                { value: "organic", label: "Organic" },
-                { value: "playful", label: "Playful" }
-              ]
-            })
-          : ""
-      }
     </section>
   `;
 }
 
 function renderMotionStep(state, visibleQuestions) {
+  const motionMeta = motionLevelVisuals[state.motionLevel] ?? motionLevelVisuals.medium;
+  const threeDMeta = threeDVisuals[state.threeDLevel] ?? threeDVisuals.none;
+  const loaderMeta = loaderVisuals[state.loaderType] ?? loaderVisuals["overlay-reveal"];
+  const sliderMeta = sliderModeVisuals[state.sliderMode] ?? sliderModeVisuals.hero;
+
   return `
     <section class="step-screen">
       <div class="section-head">
         <p class="eyebrow">گام ۵</p>
         <h2>موشن، لودر، اسلایدر و 3D</h2>
-        <p>اینجا تعیین می‌شود سایت چقدر زنده باشد و این زنده بودن فقط در hero باشد یا در کل تجربه.</p>
+        <p>اینجا تعیین می‌شود سایت چقدر زنده باشد. هر کارت را با تصویرش ببین: نشان می‌دهد آن گزینه دقیقاً روی صفحه چه ظاهری دارد و چه می‌کند.</p>
       </div>
-      <div class="control-grid">
-        ${renderSelect({
-          label: "Motion Level",
+      <div class="option-list">
+        ${renderVisualSelect({
+          uid: "motion-level",
+          label: "Motion Level — میزان زنده بودن سایت",
           field: "motionLevel",
           value: state.motionLevel,
           items: [
-            { value: "low", label: "Low" },
-            { value: "medium", label: "Medium" },
-            { value: "high", label: "High" }
-          ]
+            { value: "low", label: "Low — فقط ظریف" },
+            { value: "medium", label: "Medium — حرفه‌ای" },
+            { value: "high", label: "High — روایی و پرتحرک" }
+          ],
+          visual: renderMotionVisual(motionMeta.gradient, motionMeta.motion, "motion-level"),
+          useWhen: motionMeta.useWhen,
+          doesNotDo: motionMeta.doesNotDo,
+          reference: motionMeta.reference
         })}
-        ${renderSelect({
-          label: "سطح 3D",
+        ${renderVisualSelect({
+          uid: "three-d-level",
+          label: "سطح 3D — چقدر از سایت سه‌بعدی باشد",
           field: "threeDLevel",
           value: state.threeDLevel,
           items: [
-            { value: "none", label: "بدون 3D" },
-            { value: "low", label: "Accent only" },
-            { value: "medium", label: "Section-driven" },
-            { value: "high", label: "Immersive" }
-          ]
+            { value: "none", label: "هیچ 3D نداریم" },
+            { value: "low", label: "فقط یک عنصر کوچک 3D" },
+            { value: "medium", label: "چند بخش 3D" },
+            { value: "high", label: "کل قالب همه‌جانبه 3D" }
+          ],
+          visual: renderThreeDVisual(threeDMeta.shape, "three-d-level"),
+          useWhen: threeDMeta.useWhen,
+          doesNotDo: threeDMeta.doesNotDo,
+          reference: threeDMeta.reference
         })}
       </div>
-      <div class="chip-wall">
-        ${renderChip({
-          label: "Smooth Scroll فعال",
-          value: "true",
-          action: "set-boolean",
-          group: "smoothScroll",
-          active: state.smoothScroll,
-          kind: "accent"
-        })}
-        ${renderChip({
-          label: "Smooth Scroll غیرفعال",
-          value: "false",
-          action: "set-boolean",
-          group: "smoothScroll",
-          active: !state.smoothScroll
-        })}
-        ${renderChip({
-          label: "لودر می‌خواهد",
-          value: "true",
-          action: "set-boolean",
-          group: "wantsLoader",
-          active: state.wantsLoader,
-          kind: "accent"
-        })}
-        ${renderChip({
-          label: "بدون لودر",
-          value: "false",
-          action: "set-boolean",
-          group: "wantsLoader",
-          active: !state.wantsLoader
-        })}
+      <div class="group-block">
+        <div class="group-title">اسکرول و لودر</div>
+        <div class="chip-wall">
+          ${renderChip({
+            label: "Smooth Scroll فعال",
+            value: "true",
+            action: "set-boolean",
+            group: "smoothScroll",
+            active: state.smoothScroll,
+            kind: "accent"
+          })}
+          ${renderChip({
+            label: "Smooth Scroll غیرفعال",
+            value: "false",
+            action: "set-boolean",
+            group: "smoothScroll",
+            active: !state.smoothScroll
+          })}
+        </div>
+        <div class="option-hint">
+          <b>Smooth Scroll یعنی چه؟</b> زمانی که کاربر پیمایش می‌کند، حرکت نرم و کند می‌شود (مثل Lenis) و بخش‌ها مثل یک تایم‌لاین می‌لغزند. روی موبایل گاهی حالت طبیعی پیمایش را خراب می‌کند.
+        </div>
       </div>
-      ${visibleQuestions.includes("loader-type")
-        ? renderSelect({
-            label: "نوع لودر",
-            field: "loaderType",
-            value: state.loaderType,
-            items: [
-              { value: "overlay-reveal", label: "Overlay Reveal" },
-              { value: "skeleton", label: "Skeleton + content visible" },
-              { value: "hard-gate", label: "Show after ready" }
-            ]
-          })
-        : ""}
-      <div class="inline-split">
-        ${renderChip({
-          label: "Hero Section",
-          value: "hero",
-          action: "set-field-value",
-          group: "sliderMode",
-          active: state.sliderMode === "hero",
-          kind: "accent"
-        })}
-        ${renderChip({
-          label: "Slider Focus",
-          value: "slider",
-          action: "set-field-value",
-          group: "sliderMode",
-          active: state.sliderMode === "slider"
-        })}
+      <div class="group-block">
+        <div class="group-title">نوع لودر</div>
+        <div class="chip-wall">
+          ${renderChip({
+            label: "سایت لودر می‌خواهد",
+            value: "true",
+            action: "set-boolean",
+            group: "wantsLoader",
+            active: state.wantsLoader,
+            kind: "accent"
+          })}
+          ${renderChip({
+            label: "بدون لودر",
+            value: "false",
+            action: "set-boolean",
+            group: "wantsLoader",
+            active: !state.wantsLoader
+          })}
+        </div>
+        ${
+          state.wantsLoader
+            ? renderVisualSelect({
+                uid: "loader-type",
+                label: "نوع لودر — کاربر اولین بار چه می‌بیند",
+                field: "loaderType",
+                value: state.loaderType,
+                items: [
+                  { value: "overlay-reveal", label: "Overlay Reveal — لایه روی صفحه" },
+                  { value: "skeleton", label: "Skeleton — ساختار خاکستری" },
+                  { value: "hard-gate", label: "Show after ready — بعد از آماده‌شدن" }
+                ],
+                visual: renderLoaderVisual(loaderMeta.pattern, "loader-type"),
+                useWhen: loaderMeta.useWhen,
+                doesNotDo: loaderMeta.doesNotDo,
+                reference: loaderMeta.reference
+              })
+            : ""
+        }
       </div>
-      <div class="question-tags">
-        ${visibleQuestions.map((question) => `<span>${question}</span>`).join("")}
+      <div class="group-block">
+        <div class="group-title">هیرو یا اسلایدر</div>
+        <div class="option-list">
+          ${renderOptionCard({
+            uid: "slider-hero",
+            title: sliderModeVisuals.hero.title,
+            whatItDoes: sliderModeVisuals.hero.whatItDoes,
+            useWhen: sliderModeVisuals.hero.useWhen,
+            doesNotDo: sliderModeVisuals.hero.doesNotDo,
+            reference: sliderModeVisuals.hero.reference,
+            visual: renderLayoutVisual("hero", "slider-hero"),
+            active: state.sliderMode === "hero",
+            action: "set-field-value",
+            field: "sliderMode",
+            value: "hero"
+          })}
+          ${renderOptionCard({
+            uid: "slider-slider",
+            title: sliderModeVisuals.slider.title,
+            whatItDoes: sliderModeVisuals.slider.whatItDoes,
+            useWhen: sliderModeVisuals.slider.useWhen,
+            doesNotDo: sliderModeVisuals.slider.doesNotDo,
+            reference: sliderModeVisuals.slider.reference,
+            visual: renderLayoutVisual("slider", "slider-slider"),
+            active: state.sliderMode === "slider",
+            action: "set-field-value",
+            field: "sliderMode",
+            value: "slider"
+          })}
+        </div>
+      </div>
+      <div class="group-block">
+        <div class="group-title">سوالاتی که سیستم تا الان فعال کرده</div>
+        <div class="question-tags">${renderQuestionTags(visibleQuestions)}</div>
+        <div class="option-hint">
+          <b>این لیست چیست؟</b> این برچسب‌ها نشان می‌دهند بر اساس جواب‌هایت کدام سوالات لازم شده‌اند. مثلاً چون 3D را انتخاب کردی، سوال «کدام آبجکت‌های سه‌بعدی» و «سه‌بعدی کجای سایت» در پرامپت نهایی لحاظ می‌شوند.
+        </div>
       </div>
     </section>
   `;
